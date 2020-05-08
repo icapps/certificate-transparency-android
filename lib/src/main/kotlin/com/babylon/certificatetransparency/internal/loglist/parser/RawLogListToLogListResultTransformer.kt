@@ -20,17 +20,14 @@ import com.babylon.certificatetransparency.internal.loglist.LogListJsonFailedLoa
 import com.babylon.certificatetransparency.internal.loglist.LogListJsonFailedLoadingWithException
 import com.babylon.certificatetransparency.internal.loglist.LogListSigFailedLoading
 import com.babylon.certificatetransparency.internal.loglist.LogListSigFailedLoadingWithException
-import com.babylon.certificatetransparency.internal.loglist.LogServerSignatureResult
 import com.babylon.certificatetransparency.internal.loglist.RawLogListJsonFailedLoading
 import com.babylon.certificatetransparency.internal.loglist.RawLogListJsonFailedLoadingWithException
 import com.babylon.certificatetransparency.internal.loglist.RawLogListSigFailedLoading
 import com.babylon.certificatetransparency.internal.loglist.RawLogListSigFailedLoadingWithException
-import com.babylon.certificatetransparency.internal.loglist.SignatureVerificationFailed
 import com.babylon.certificatetransparency.loglist.LogListResult
 import com.babylon.certificatetransparency.loglist.RawLogListResult
 
 internal class RawLogListToLogListResultTransformer(
-    private val logListVerifier: LogListVerifier = LogListVerifier(),
     private val logListJsonParser: LogListJsonParser = LogListJsonParserV2()
 ) {
     fun transform(rawLogListResult: RawLogListResult) =
@@ -51,10 +48,7 @@ internal class RawLogListToLogListResultTransformer(
         }
 
     private fun transformSuccess(rawLogListResult: RawLogListResult.Success): LogListResult {
-        val (logListJson, signature) = rawLogListResult
-        return when (val signatureResult = logListVerifier.verify(logListJson, signature)) {
-            is LogServerSignatureResult.Valid -> logListJsonParser.parseJson(logListJson)
-            is LogServerSignatureResult.Invalid -> SignatureVerificationFailed(signatureResult)
-        }
+        val (logListJson, _) = rawLogListResult
+        return logListJsonParser.parseJson(logListJson)
     }
 }

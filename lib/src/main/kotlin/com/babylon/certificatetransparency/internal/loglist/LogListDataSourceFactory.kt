@@ -21,12 +21,23 @@ import com.babylon.certificatetransparency.datasource.DataSource
 import com.babylon.certificatetransparency.internal.loglist.parser.RawLogListToLogListResultTransformer
 import com.babylon.certificatetransparency.loglist.LogListResult
 import com.babylon.certificatetransparency.loglist.RawLogListResult
+import okhttp3.CertificatePinner
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+
 
 internal object LogListDataSourceFactory {
 
     fun create(diskCache: DiskCache? = null): DataSource<LogListResult> {
+        val certificatePinner = CertificatePinner.Builder()
+            .add("www.gstatic.com", "sha256/iie1VXtL7HzAMF+/PVPR9xzT80kQxdZeJ+zduCB3uj0=") // GlobalSign Root CA R2
+            .add("www.gstatic.com", "sha256/cGuxAXyFXFkWm61cF4HPWX8S0srS9j0aSqN0k4AP+4A=") // GlobalSign Root CA R3 (next in line)
+            .build()
+        val client = OkHttpClient.Builder()
+            .certificatePinner(certificatePinner)
+            .build()
         val retrofit = Retrofit.Builder()
+            .client(client)
             .baseUrl("https://www.gstatic.com/ct/log_list/v2/")
             .build()
 

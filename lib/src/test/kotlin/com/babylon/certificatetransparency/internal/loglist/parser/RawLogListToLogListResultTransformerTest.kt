@@ -61,9 +61,7 @@ class RawLogListToLogListResultTransformerTest {
         val signature = calculateSignature(keyPair.private, jsonIncomplete.toByteArray())
 
         // when we ask for data
-        val result = RawLogListToLogListResultTransformer(
-            logListVerifier = LogListVerifier(keyPair.public)
-        ).transform(
+        val result = RawLogListToLogListResultTransformer().transform(
             RawLogListResult.Success(
                 jsonIncomplete, signature
             )
@@ -162,9 +160,7 @@ class RawLogListToLogListResultTransformerTest {
         val signature = calculateSignature(keyPair.private, jsonValidUntil.toByteArray())
 
         // when we ask for data
-        val result = RawLogListToLogListResultTransformer(
-            logListVerifier = LogListVerifier(keyPair.public)
-        ).transform(
+        val result = RawLogListToLogListResultTransformer().transform(
             RawLogListResult.Success(
                 jsonValidUntil, signature
             )
@@ -183,9 +179,7 @@ class RawLogListToLogListResultTransformerTest {
         val signature = calculateSignature(keyPair.private, jsonValidUntil.toByteArray())
 
         // when we ask for data
-        val result = RawLogListToLogListResultTransformer(
-            logListVerifier = LogListVerifier(keyPair.public)
-        ).transform(
+        val result = RawLogListToLogListResultTransformer().transform(
             RawLogListResult.Success(
                 jsonValidUntil, signature
             )
